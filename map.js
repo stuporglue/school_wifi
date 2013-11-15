@@ -22,7 +22,7 @@ function showBuilding(e){
     map.fitBounds(layers.hiddenBuilding.getBounds());
 
     // Get the rooms for the selected building
-    $.getJSON("http://stuporglue.cartodb.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM rooms WHERE building='" + layers.hiddenBuilding.feature.properties.building_n + "'", function(json){
+    $.getJSON("./queries/building_by_id.py?building=" + layers.hiddenBuilding.feature.properties.building_n, function(json){
 
         // Move each polygon into an appropriate array in hiddenFloors
         var currentFloors = [];
@@ -60,7 +60,7 @@ function mapInit(){
 
 
     // Add buildings to the map
-    $.getJSON("http://stuporglue.cartodb.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM buildings",function(json){
+    $.getJSON("./queries/buildings.py",function(json){
         layers.buildings = L.geoJson(json,{
             onEachFeature: function(feature,layer){
                 layer.on('click',showBuilding);
