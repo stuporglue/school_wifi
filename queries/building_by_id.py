@@ -14,6 +14,7 @@ import json
 params = cgi.FieldStorage()
 
 
+# Run the query, quoting the user input
 dbconn.cur.execute("""
 SELECT 
 floor,
@@ -24,6 +25,7 @@ WHERE
 building=""" + dbconn.adapt(str(params['building'].value)).getquoted() + """
 """) 
 
+# Build an empty GeoJSON FeatureCollection object, then fill it from the database results
 output = {
         'type' : 'FeatureCollection',
         'features' : []

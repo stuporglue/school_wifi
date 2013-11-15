@@ -5,14 +5,11 @@
 print "Content-Type: application/json; charset=utf-8"
 print
 
-# Import the cgi module,json and initialize the database connection
-import cgi
+# Import the json and initialize the database connection
 import dbconn
 import json
 
 # Initialize the FieldStorage object so we can get user input
-params = cgi.FieldStorage()
-
 
 dbconn.cur.execute("""
 SELECT 
