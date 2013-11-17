@@ -11,12 +11,12 @@ function showBuilding(e){
 
     // Restore hidden building poly
     if(layers.hiddenBuilding !== null){
-        layers.buildings.addLayer(layers.hiddenBuilding);
+        layers.chloro.addLayer(layers.hiddenBuilding);
     }
 
     // Move the clicked building to the hiddenBuilding holding place
     layers.hiddenBuilding = e.target;
-    layers.buildings.removeLayer(e.target);
+    layers.chloro.removeLayer(e.target);
 
     // Zoom and pan to building the user has clicked so they can see the rooms better
     map.fitBounds(layers.hiddenBuilding.getBounds());
@@ -66,9 +66,18 @@ function mapInit(){
                 layer.on('click',showBuilding);
             }
         });
-        map.addLayer(layers.buildings); 
+        // map.addLayer(layers.buildings); 
     });
 
+    // Add buildings to the map
+    $.getJSON("./queries/mactrac.py",function(json){
+        layers.chloro = L.geoJson(json,{
+            onEachFeature: function(feature,layer){
+                layer.on('click',showBuilding);
+            }
+        });
+        map.addLayer(layers.chloro); 
+    });
 
     // Add an empty rooms layer to show rooms on later
     layers.rooms = L.geoJson();

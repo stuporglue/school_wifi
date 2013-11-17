@@ -4,6 +4,7 @@ import psycopg2
 import psycopg2.extras
 from psycopg2.extensions import adapt
 import ConfigParser
+import simplejson as json
 
 config = ConfigParser.ConfigParser()
 config.readfp(open('dbconn.cfg'))
@@ -20,3 +21,39 @@ except Exception as e:
     exit()
 
 
+
+# Send the results of a query to the browser as geojson
+def send_geojson(q):
+
+    cur.execute(q)
+
+    # Build an empty GeoJSON FeatureCollection object, then fill it from the database results
+    output = {
+            'type' : 'FeatureCollection',
+            'features' : []
+    }
+
+    for row in cur:
+        # Make a single feature
+        one = {
+                'type' : 'Feature',
+                'geometry' : json.loads(row['the_geom']),
+                'properties' : {}
+        }
+
+        # Apply its properties
+        for k in row.keys():
+            if k != 'the_geom':
+                one['properties'][k] = row[k]
+
+        # Stick it in our collection
+        output['features'].append(one)
+
+
+    # First we have to print some headers
+    # Followed by two blank lines. That's how the browser knows the headers are all done
+    print "Content-Type: application/json; charset=utf-8"
+    print
+
+    # Encode resulting object as json
+    print json.dumps(output)
