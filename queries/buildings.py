@@ -5,7 +5,7 @@ import dbconn
 
 # Initialize the FieldStorage object so we can get user input
 
-dbconn.send_geojson("""
+dbconn.send_query("""
 SELECT 
 building_n,
 ST_AsGeoJson(the_geom) AS the_geom 

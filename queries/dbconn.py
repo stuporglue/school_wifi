@@ -14,26 +14,34 @@ try:
 
     # Create a server-side cursor so we don't end up with all records in memory at once
     # http://wiki.postgresql.org/wiki/Using_psycopg2_with_PostgreSQL 
-    cur = conn.cursor('dbconn', cursor_factory=psycopg2.extras.DictCursor)
+    cur = conn.cursor('dbconn', cursor_factory=psycopg2.extras.RealDictCursor,scrollable=True)
 except Exception as e:
     print "Unable to connect to the database"
     print e
     exit()
 
+def rewind():
+    return cur.scroll(0,mode='absolute')
 
+def run_query(q):
+    cur.execute(q)
+    return cur
 
 # Send the results of a query to the browser as geojson
-def send_geojson(q):
+def send_query(q):
+    cur = run_query(q)
+    geojson = array_to_geojson(cur)
+    return send_array_as_json(geojson)
 
-    cur.execute(q)
 
+def array_to_geojson(rows):
     # Build an empty GeoJSON FeatureCollection object, then fill it from the database results
     output = {
             'type' : 'FeatureCollection',
             'features' : []
     }
 
-    for row in cur:
+    for row in rows:
         # Make a single feature
         one = {
                 'type' : 'Feature',
@@ -48,12 +56,14 @@ def send_geojson(q):
 
         # Stick it in our collection
         output['features'].append(one)
+    return output
 
-
+def send_array_as_json(arr):
     # First we have to print some headers
     # Followed by two blank lines. That's how the browser knows the headers are all done
     print "Content-Type: application/json; charset=utf-8"
     print
 
     # Encode resulting object as json
-    print json.dumps(output)
+    print json.dumps(arr)
+

@@ -11,12 +11,12 @@ function showBuilding(e){
 
     // Restore hidden building poly
     if(layers.hiddenBuilding !== null){
-        layers.chloro.addLayer(layers.hiddenBuilding);
+        layers.choro.addLayer(layers.hiddenBuilding);
     }
 
     // Move the clicked building to the hiddenBuilding holding place
     layers.hiddenBuilding = e.target;
-    layers.chloro.removeLayer(e.target);
+    layers.choro.removeLayer(e.target);
 
     // Zoom and pan to building the user has clicked so they can see the rooms better
     map.fitBounds(layers.hiddenBuilding.getBounds());
@@ -46,6 +46,26 @@ function showBuilding(e){
     });
 }
 
+function getColor(bucket) {
+    return bucket == 5 ? '#800026' :
+           bucket == 4  ? '#BD0026' :
+           bucket == 3  ? '#E31A1C' :
+           bucket == 2  ? '#FC4E2A' :
+           bucket == 1   ? '#FD8D3C' :
+                      '#FFEDA0';
+}
+
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.jenks),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
 function mapInit(){
     // Make the map object
     map = L.map('map').setView([44.9722898,-93.23534488], 16);
@@ -60,23 +80,24 @@ function mapInit(){
 
 
     // Add buildings to the map
-    $.getJSON("./queries/buildings.py",function(json){
-        layers.buildings = L.geoJson(json,{
-            onEachFeature: function(feature,layer){
-                layer.on('click',showBuilding);
-            }
-        });
-        // map.addLayer(layers.buildings); 
-    });
+    //$.getJSON("./queries/buildings.py",function(json){
+    //    layers.buildings = L.geoJson(json,{
+    //        onEachFeature: function(feature,layer){
+    //            layer.on('click',showBuilding);
+    //        }
+    //    });
+    //    // map.addLayer(layers.buildings); 
+    //});
 
     // Add buildings to the map
     $.getJSON("./queries/mactrac.py",function(json){
-        layers.chloro = L.geoJson(json,{
+        layers.choro = L.geoJson(json,{
             onEachFeature: function(feature,layer){
                 layer.on('click',showBuilding);
-            }
+            },
+            style: style
         });
-        map.addLayer(layers.chloro); 
+        map.addLayer(layers.choro); 
     });
 
     // Add an empty rooms layer to show rooms on later

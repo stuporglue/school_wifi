@@ -9,7 +9,7 @@ import dbconn
 params = cgi.FieldStorage()
 
 # Run the query, quoting the user input
-dbconn.send_geojson("""
+dbconn.send_query("""
 SELECT 
 floor,
 ST_AsGeoJson(the_geom) AS the_geom 
