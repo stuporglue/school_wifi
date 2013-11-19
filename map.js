@@ -1,6 +1,7 @@
 // Global variables
 var map;
 var layers = {};
+var breaks;
 
 // function called when clicking a building polygon
 // Argument layer might actually be a feature. Not sure yet
@@ -99,6 +100,12 @@ function mapInit(){
         });
         map.addLayer(layers.choro); 
     });
+
+    // Get breaks for key
+    $.getJSON("./queries/breaks.py",function(json){
+        breaks = json;
+    });
+
 
     // Add an empty rooms layer to show rooms on later
     layers.rooms = L.geoJson();
