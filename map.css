@@ -3,6 +3,56 @@ body,html{
     padding: 0;
     height: 100%;
 }
+
 #map { 
     height: 100%;
 }
+
+.aptable {
+    max-height: 300px;
+    overflow: auto;
+}
+.aptable td {
+    vertical-align: top;
+}
+
+.legend {
+    line-height: 18px;
+    background-color: #fff7d0;
+    border:2px solid #444;
+    opacity: 1;
+    padding: 6px;
+    border-radius: 5px;
+    color: #555;
+}
+
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.9;
+}
+
+
+/* WARNING: 
+ * Polygons use CSS Styles
+ * The Legend uses HTML Styles! 
+ * */
+.jenks { 
+    background-color: #333333;
+    fill: #333333; 
+    fill-opacity: 0.7;
+    stroke: #ffffff;
+    stroke-opacity: 1;
+    stroke-width: 2;
+}
+
+.jenks1 { fill: #ee0104; background-color: #ee0104;}
+.jenks2 { fill: #f77c2b; background-color: #f77c2b;}
+.jenks3 { fill: #ffe44c; background-color: #ffe44c;}
+.jenks4 { fill: #adde37; background-color: #adde37;}
+.jenks5 { fill: #05d00d; background-color: #05d00d;}
+
+
+

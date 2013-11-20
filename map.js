@@ -2,6 +2,8 @@
 var map;
 var layers = {};
 var breaks;
+var popup = null;
+var floorslider;
 
 // function called when clicking a building polygon
 // Argument layer might actually be a feature. Not sure yet
@@ -13,17 +15,43 @@ function showBuilding(e){
     // Restore hidden building poly
     if(layers.hiddenBuilding !== null){
         layers.choro.addLayer(layers.hiddenBuilding);
+        layers.hiddenBuilding = null;
     }
 
-    // Move the clicked building to the hiddenBuilding holding place
-    layers.hiddenBuilding = e.target;
-    layers.choro.removeLayer(e.target);
+    if(popup !== null){
+        map.closePopup(popup);
+        popup = null;
+    }
 
     // Zoom and pan to building the user has clicked so they can see the rooms better
-    map.fitBounds(layers.hiddenBuilding.getBounds());
 
     // Get the rooms for the selected building
-    $.getJSON("./queries/building_by_id.py?building=" + layers.hiddenBuilding.feature.properties.building_n, function(json){
+    $.getJSON("./queries/building_by_id.py?building=" + e.target.feature.properties.building_n, function(json){
+
+            //.setLatLng(e.latlng)
+        if(json.features.length === 0){
+            $.getJSON("./queries/jacks_by_building_id.py?building=" + e.target.feature.properties.building_n, function(wifilist){
+                var html = "<p>We don't have a map of the rooms in this building, but we do have this list of Wifi points</p>";
+                html += "<div class='aptable'><table><tr><th>Floor</th><th>Room(s)</th></tr>";
+                for(var i = 0;i<wifilist.length;i++){
+                    html += "<tr><td>" + wifilist[i]['floor'] + "</td><td>" + wifilist[i]['rooms'].join(', ') + "</td><tr>";
+                }
+                html += "<table></div>";
+
+                popup = L.popup()
+                .setLatLng(JSON.parse(e.target.feature.properties.centroid).coordinates.reverse())
+                .setContent(html)
+                .openOn(map);
+                return;
+            });
+
+            return;
+        }
+
+        // Move the clicked building to the hiddenBuilding holding place
+        layers.hiddenBuilding = e.target;
+        map.fitBounds(layers.hiddenBuilding.getBounds());
+        layers.choro.removeLayer(e.target);
 
         // Move each polygon into an appropriate array in hiddenFloors
         var currentFloors = [];
@@ -47,26 +75,6 @@ function showBuilding(e){
     });
 }
 
-function getColor(bucket) {
-    return bucket == 5 ? '#800026' :
-           bucket == 4  ? '#BD0026' :
-           bucket == 3  ? '#E31A1C' :
-           bucket == 2  ? '#FC4E2A' :
-           bucket == 1   ? '#FD8D3C' :
-                      '#FFEDA0';
-}
-
-function style(feature) {
-    return {
-        fillColor: getColor(feature.properties.jenks),
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
-
 function mapInit(){
     // Make the map object
     map = L.map('map').setView([44.9722898,-93.23534488], 16);
@@ -79,32 +87,66 @@ function mapInit(){
     });
     map.addLayer(layers.tiles);
 
-
-    // Add buildings to the map
-    //$.getJSON("./queries/buildings.py",function(json){
-    //    layers.buildings = L.geoJson(json,{
-    //        onEachFeature: function(feature,layer){
-    //            layer.on('click',showBuilding);
-    //        }
-    //    });
-    //    // map.addLayer(layers.buildings); 
-    //});
-
     // Add buildings to the map
     $.getJSON("./queries/mactrac.py",function(json){
         layers.choro = L.geoJson(json,{
             onEachFeature: function(feature,layer){
                 layer.on('click',showBuilding);
-            },
-            style: style
+
+                // Two jenks are intended. They all belong to the jenks class, and possibly an additional jenks level
+                if(feature.properties.jenks !== null){
+                    layer._options.className = 'jenks jenks' + feature.properties.jenks;
+                }else{
+                    layer._options.className = 'jenks';
+                }
+
+            }
         });
         map.addLayer(layers.choro); 
     });
 
-    // Get breaks for key
-    $.getJSON("./queries/breaks.py",function(json){
-        breaks = json;
-    });
+    // Make the Jenks key
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        var legkeys = {
+            'jenks jenks5' : "Very High",
+            'jenks jenks4' : "High",
+            'jenks jenks3' : "Average",
+            'jenks jenks2' : "Low",
+            'jenks jenks1' : "Very Low",
+            'jenks' : "No Wifi"
+        };
+
+        for(var i in legkeys){
+            div.innerHTML += '<i class="' + i + '"></i> ' + legkeys[i] + '<br>';
+        }
+
+        return div;
+    };
+
+    legend.addTo(map);
+
+    // Make the layers slider
+    // this doesn't really look like it's going to work. Probably going to need a jQuery slider or something if we want a vertical slider
+    //floorslider = L.control({position: 'topleft'});
+    //floorslider.onAdd = function(map){
+    //    var div = L.DomUtil.create('div', 'info legend');
+    //    div.innerHTML += "<div id='sliderctrl'>"; 
+    //    div.innerHTML += "<div class='sliderlabels'><span>04</span><span>03</span><span>02</span><span>01</span><span>0G</span><span>B1</span></div>";
+    //    div.innerHTML += "<div class='sliderinput'><input id='sliderinput' type='range' min='0' max='5' step='1' /></div>";
+    //    div.innerHTML += "</div>";
+
+    //    var stop = L.DomEvent.stopPropagation;
+    //    L.DomEvent
+    //        .on(div, 'click', stop)
+    //        .on(div, 'mousedown', stop)
+    //        .on(div, 'dblclick', stop)
+    //        .on(div, 'click', stop)
+
+    //    return div;
+    //};
 
 
     // Add an empty rooms layer to show rooms on later
