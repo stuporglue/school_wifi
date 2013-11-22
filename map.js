@@ -163,6 +163,10 @@ function mapInit(){
     // hiddenFloors is a hash holding each layer of the building
     layers.hiddenBuilding = null;
     layers.hiddenFloors= {};
+	
+	var sliderControl = L.control.sliderControl({position: "topright", layer: hiddelFloors});
+	map.addControl(sliderControl);
+	sliderControl.startSlider();
 }
 
 mapInit();
