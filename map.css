@@ -60,4 +60,18 @@ body,html{
 .jenks5 { fill: #05d00d; background-color: #05d00d;}
 
 
-
+#wifilegend {
+    background: url('gradient.png') no-repeat;
+    height: 100px;    
+    width: 80px;
+    padding-left: 0px;
+    text-align: right;
+}
+#wifilegend div {
+    text-align: left;
+    margin-left: 20px;
+    padding-left: 4px;
+}
+#morewifi {
+    height: 68px;
+}

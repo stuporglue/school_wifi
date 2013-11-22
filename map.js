@@ -118,19 +118,13 @@ function mapInit(){
 
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
-        var legkeys = {
-            'jenks jenks5' : "Very High",
-            'jenks jenks4' : "High",
-            'jenks jenks3' : "Average",
-            'jenks jenks2' : "Low",
-            'jenks jenks1' : "Very Low",
-            'jenks' : "No Wifi"
-        };
-
-        for(var i in legkeys){
-            div.innerHTML += '<i class="' + i + '"></i> ' + legkeys[i] + '<br>';
-        }
-
+        var htmlstr = '';
+        htmlstr += "<div id='wifilegend'>";
+        htmlstr += "<div id='morewifi'>More Wifi</div>";
+        htmlstr += "<div id='lesswifi'>Less Wifi</div>";
+        htmlstr += "<div id='nowifi'>No Wifi</div>";
+        htmlstr += "</div>";
+        div.innerHTML += htmlstr;
         return div;
     };
 
