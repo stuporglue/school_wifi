@@ -10,6 +10,7 @@ def mactrac():
     apdata.jacksqft,
     apdata.sqftjack,
     apdata.buildingarea,
+    apdata.orig_area,
     apdata.jackcount,
     buildings.name,
     ST_AsGeoJSON(buildings.the_geom) AS the_geom,
@@ -23,6 +24,7 @@ def mactrac():
         SELECT 
         binfo.building,
         binfo.buildingarea,
+        binfo.orig_area,
         jinfo.jackcount,
         (jinfo.jackcount / binfo.buildingarea) AS jacksqft,
         (binfo.buildingarea / jinfo.jackcount ) AS sqftjack
@@ -34,7 +36,11 @@ def mactrac():
                 CASE count(fc.floors)
                     WHEN 0 THEN 0
                     ELSE  sum(b.shape_area)
-                END AS buildingarea 
+                END AS orig_area,
+                CASE count(fc.floors)
+                    WHEN 0 THEN 0
+                    ELSE  sum(ST_Area(ST_Transform(b.the_geom,3857)))
+                END AS buildingarea
             FROM
                 buildings b
             LEFT JOIN (

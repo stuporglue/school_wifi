@@ -32,6 +32,11 @@ function showBuilding(e){
         if(json.features.length === 0){
             $.getJSON("./queries/jacks_by_building_id.py?building=" + e.target.feature.properties.building_n, function(wifilist){
                 var html = "<p>We don't have a map of the rooms in this building, but we do have this list of Wifi points</p>";
+                html += "<p><dl>";
+                html += "<dt>ST_Area</dt><dd>" + e.target.feature.properties.buildingarea + "</dd>";
+                html += "<dt>shape_area</dt><dd>" + e.target.feature.properties.shape_area + "</dd>";
+                html += "<dt>Jacks</dt><dd>" + e.target.feature.properties.jackcount + "</dd>";
+                html += "</dl></p>";
                 html += "<div class='aptable'><table><tr><th>Floor</th><th>Room(s)</th></tr>";
                 for(var i = 0;i<wifilist.length;i++){
                     html += "<tr><td>" + wifilist[i]['floor'] + "</td><td>" + wifilist[i]['rooms'].join(', ') + "</td><tr>";

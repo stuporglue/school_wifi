@@ -17,7 +17,7 @@ q = """
             b.building_n AS building,
             CASE count(fc.floors)
                 WHEN 0 THEN 0
-                ELSE  sum(b.shape_area)
+            ELSE  sum(ST_Area(ST_Transform(the_geom,3860)))
             END AS buildingarea 
         FROM
             buildings b
