@@ -5,6 +5,7 @@ var breaks;
 var popup = null;
 var slider;
 var currentFloors = [];
+var floorOrder = [ "0A", "0B", "0C", "0F", "0G", "0M", "0P", "OS", "S2", "S1", "SB", "SP", "00", "LL", "01", "MZ", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18" ];
 
 // function called when clicking a building polygon
 // Argument layer might actually be a feature. Not sure yet
@@ -13,7 +14,7 @@ function showBuilding(e){
     layers.rooms.clearLayers();
     layers.hiddenFloors = {};
 
-    if(typeof slider._map == 'object'){
+    if(typeof slider._map != 'undefined' && slider._map !== null){
         map.removeControl(slider);
     }
 
@@ -77,11 +78,11 @@ function showBuilding(e){
         // Sort the floor numbers in order of lowest to highest
         // TODO: Replace this with a sort function that actually sorts floors with the letters in them
         currentFloors.sort(function(a,b){
-            return a - b;
+            return floorOrder.indexOf(a) - floorOrder.indexOf(b);
         });
 
-        replaceSlider(currentFloors.length - 1,0);
         slider.addTo(map);
+        replaceSlider(currentFloors.length - 1,0);
 
         // Add a single floor to the map
         // TODO: Add the ground floor instead of the first sorted floor
