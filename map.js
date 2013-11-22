@@ -3,7 +3,8 @@ var map;
 var layers = {};
 var breaks;
 var popup = null;
-var floorslider;
+var slider;
+var currentFloors = [];
 
 // function called when clicking a building polygon
 // Argument layer might actually be a feature. Not sure yet
@@ -11,6 +12,10 @@ function showBuilding(e){
     // Clean your room!
     layers.rooms.clearLayers();
     layers.hiddenFloors = {};
+
+    if(typeof slider._map == 'object'){
+        map.removeControl(slider);
+    }
 
     // Restore hidden building poly
     if(layers.hiddenBuilding !== null){
@@ -59,7 +64,7 @@ function showBuilding(e){
         layers.choro.removeLayer(e.target);
 
         // Move each polygon into an appropriate array in hiddenFloors
-        var currentFloors = [];
+        currentFloors = [];
         for(var i = 0;i<json.features.length;i++){
             if(typeof layers.hiddenFloors[json.features[i].properties.floor] == 'undefined'){
                 layers.hiddenFloors[json.features[i].properties.floor] = [];
@@ -68,11 +73,15 @@ function showBuilding(e){
             layers.hiddenFloors[json.features[i].properties.floor].push(json.features[i]);
         }
 
+
         // Sort the floor numbers in order of lowest to highest
         // TODO: Replace this with a sort function that actually sorts floors with the letters in them
         currentFloors.sort(function(a,b){
             return a - b;
         });
+
+        replaceSlider(currentFloors.length - 1,0);
+        slider.addTo(map);
 
         // Add a single floor to the map
         // TODO: Add the ground floor instead of the first sorted floor
@@ -126,27 +135,6 @@ function mapInit(){
 
     legend.addTo(map);
 
-    // Make the layers slider
-    // this doesn't really look like it's going to work. Probably going to need a jQuery slider or something if we want a vertical slider
-    //floorslider = L.control({position: 'topleft'});
-    //floorslider.onAdd = function(map){
-    //    var div = L.DomUtil.create('div', 'info legend');
-    //    div.innerHTML += "<div id='sliderctrl'>"; 
-    //    div.innerHTML += "<div class='sliderlabels'><span>04</span><span>03</span><span>02</span><span>01</span><span>0G</span><span>B1</span></div>";
-    //    div.innerHTML += "<div class='sliderinput'><input id='sliderinput' type='range' min='0' max='5' step='1' /></div>";
-    //    div.innerHTML += "</div>";
-
-    //    var stop = L.DomEvent.stopPropagation;
-    //    L.DomEvent
-    //        .on(div, 'click', stop)
-    //        .on(div, 'mousedown', stop)
-    //        .on(div, 'dblclick', stop)
-    //        .on(div, 'click', stop)
-
-    //    return div;
-    //};
-
-
     // Add an empty rooms layer to show rooms on later
     layers.rooms = L.geoJson();
     map.addLayer(layers.rooms);
@@ -157,9 +145,22 @@ function mapInit(){
     layers.hiddenBuilding = null;
     layers.hiddenFloors= {};
 	
-	var sliderControl = L.control.sliderControl({position: "topright", layer: layers.hiddenFloors});
-	map.addControl(sliderControl);
-	sliderControl.startSlider();
+	slider = L.control({position: 'topright'});
+
+    slider.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML += '<div id="slider-vertical"></div>';
+
+        var stop = L.DomEvent.stopPropagation;
+
+        L.DomEvent
+            .on(div, 'click', stop)
+            .on(div, 'mousedown', stop)
+            .on(div, 'dblclick', stop);
+
+        return div;
+    };
+
 }
 
 mapInit();

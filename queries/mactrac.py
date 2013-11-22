@@ -76,7 +76,7 @@ def mactrac():
     for row in rows:
         if(row['jacksqft'] != None):
             jacksqft.append(row['jacksqft'])
-    breaks = jenks.getJenksBreaks(jacksqft, 5)
+    breaks = jenks.getJenksBreaks(jacksqft, 16)
 
     # Add that info into the resulting data
     for row in rows:
