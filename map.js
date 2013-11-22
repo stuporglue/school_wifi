@@ -97,15 +97,8 @@ function mapInit(){
         layers.choro = L.geoJson(json,{
             onEachFeature: function(feature,layer){
                 layer.on('click',showBuilding);
-
-                // Two jenks are intended. They all belong to the jenks class, and possibly an additional jenks level
-                if(feature.properties.jenks !== null){
-                    layer._options.className = 'jenks jenks' + feature.properties.jenks;
-                }else{
-                    layer._options.className = 'jenks';
-                }
-
-            }
+            },
+            style: style
         });
         map.addLayer(layers.choro); 
     });
