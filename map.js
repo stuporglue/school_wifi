@@ -164,7 +164,7 @@ function mapInit(){
     layers.hiddenBuilding = null;
     layers.hiddenFloors= {};
 	
-	var sliderControl = L.control.sliderControl({position: "topright", layer: hiddelFloors});
+	var sliderControl = L.control.sliderControl({position: "topright", layer: layers.hiddelFloors});
 	map.addControl(sliderControl);
 	sliderControl.startSlider();
 }
