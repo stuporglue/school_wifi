@@ -13,7 +13,7 @@ def roomJacks():
     # Run the query, quoting the user input
     dbconn.send_query("""
             SELECT
-			st_centroid(rooms.the_geom) AS center,
+			ST_AsGeoJSON(st_centroid(rooms.the_geom)) AS the_geom,
 			split_part(jack,'-',3) AS floor,
 			split_part(jack,'-',4) AS room
 			FROM access_points,rooms WHERE 

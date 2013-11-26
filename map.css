@@ -9,6 +9,11 @@ body,html{
     width: 10px;
 }
 
+.ui-slider-handle {
+    border: 1px solid black !important;
+    width: 35px !important;
+}
+
 #map { 
     height: 100%;
 }
