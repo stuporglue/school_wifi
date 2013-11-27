@@ -23,7 +23,9 @@ def roomJacks():
 			split_part(rooms.room_id, '-', 2)=""" +
 			dbconn.adapt(str(params['building'].value)).getquoted() + """
 			AND
-			lpad(split_part(rooms.room_id, '-', 4),5,'0')=split_part(jack,'-',4)
+			lpad(split_part(rooms.room_id, '-', 4),5,'0')=split_part(jack,'-',4) 
+                        AND
+			split_part(rooms.room_id, '-', 3)=split_part(jack,'-',3)
     """) 
 
 roomJacks()

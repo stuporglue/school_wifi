@@ -6,7 +6,7 @@ body,html{
 
 #slider-vertical {
     height: 180px;
-    width: 10px;
+    width: 30px;
 }
 
 .ui-slider-handle {
@@ -26,6 +26,12 @@ body,html{
     vertical-align: top;
 }
 
+
+
+.leaflet-top.leaflet-right  .legend{
+    background-color: #fff7d0;
+}
+
 .legend {
     line-height: 18px;
     background-color: #fff7d0;
@@ -34,49 +40,41 @@ body,html{
     padding: 6px;
     border-radius: 5px;
     color: #555;
+    margin: 30px !important;
 }
-
-.legend i {
-    width: 18px;
-    height: 18px;
-    float: left;
-    margin-right: 8px;
-    opacity: 0.9;
-}
-
 
 /* WARNING: 
  * Polygons use CSS Styles
  * The Legend uses HTML Styles! 
  * */
-.jenks { 
-    background-color: #333333;
-    fill: #333333; 
-    fill-opacity: 0.7;
-    stroke: #ffffff;
-    stroke-opacity: 1;
-    stroke-width: 2;
-}
+    .jenks { 
+        background-color: #333333;
+        fill: #333333; 
+        fill-opacity: 0.7;
+        stroke: #ffffff;
+        stroke-opacity: 1;
+        stroke-width: 2;
+    }
 
-.jenks1 { fill: #ee0104; background-color: #ee0104;}
-.jenks2 { fill: #f77c2b; background-color: #f77c2b;}
-.jenks3 { fill: #ffe44c; background-color: #ffe44c;}
-.jenks4 { fill: #adde37; background-color: #adde37;}
-.jenks5 { fill: #05d00d; background-color: #05d00d;}
+    .jenks1 { fill: #ee0104; background-color: #ee0104;}
+    .jenks2 { fill: #f77c2b; background-color: #f77c2b;}
+    .jenks3 { fill: #ffe44c; background-color: #ffe44c;}
+    .jenks4 { fill: #adde37; background-color: #adde37;}
+    .jenks5 { fill: #05d00d; background-color: #05d00d;}
 
 
-#wifilegend {
-    background: url('gradient.png') no-repeat;
-    height: 100px;    
-    width: 80px;
-    padding-left: 0px;
-    text-align: right;
-}
-#wifilegend div {
-    text-align: left;
-    margin-left: 20px;
-    padding-left: 4px;
-}
-#morewifi {
-    height: 68px;
-}
+    #wifilegend {
+        background: url('gradient.png') no-repeat;
+        height: 100px;    
+        width: 80px;
+        padding-left: 0px;
+        text-align: right;
+    }
+    #wifilegend div {
+        text-align: left;
+        margin-left: 20px;
+        padding-left: 4px;
+    }
+    #morewifi {
+        height: 68px;
+    }
