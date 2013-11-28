@@ -26,8 +26,6 @@ body,html{
     vertical-align: top;
 }
 
-
-
 .leaflet-top.leaflet-right  .legend{
     background-color: #fff7d0;
 }
@@ -61,7 +59,6 @@ body,html{
     .jenks3 { fill: #ffe44c; background-color: #ffe44c;}
     .jenks4 { fill: #adde37; background-color: #adde37;}
     .jenks5 { fill: #05d00d; background-color: #05d00d;}
-
 
     #wifilegend {
         background: url('gradient.png') no-repeat;
