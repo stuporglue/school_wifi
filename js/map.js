@@ -167,7 +167,17 @@ function mapInit(){
     layers.rooms = L.geoJson();
     map.addLayer(layers.rooms);
 
-    layers.points = L.geoJson();
+    layers.points = L.geoJson(null,{
+        style: { 
+                color: null,
+                fillColor: '#22ff20',  
+                weight: 20, 
+                fillOpacity: .7, 
+                opacity: .5
+            }
+        }
+    );
+
     map.addLayer(layers.points);
 
     // Make objects to store hidden stuff
